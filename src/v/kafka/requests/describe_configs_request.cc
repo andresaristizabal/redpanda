@@ -14,6 +14,7 @@
 #include "kafka/errors.h"
 #include "kafka/requests/request_context.h"
 #include "kafka/requests/response.h"
+#include "model/fundamental.h"
 #include "model/metadata.h"
 #include "model/validation.h"
 
@@ -60,8 +61,11 @@ ss::future<response_ptr> describe_configs_api::process(
 
         switch (resource.resource_type) {
         case config_resource_type::topic: {
-            model::topic_namespace topic(
-              cluster::kafka_namespace, model::topic(resource.resource_name));
+            const auto rr = model::materialized_or_source_topic(
+              model::topic(resource.resource_name));
+            std::cout << "Inside describe configs request: {}" << rr
+                      << std::endl;
+            model::topic_namespace topic(cluster::kafka_namespace, rr);
 
             auto err = model::validate_kafka_topic_name(topic.tp);
             if (err) {
