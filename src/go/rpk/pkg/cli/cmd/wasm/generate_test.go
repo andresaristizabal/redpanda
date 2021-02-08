@@ -70,7 +70,7 @@ func TestWasmCommand(t *testing.T) {
 		},
 		{
 			name:	"should create the project at the given path",
-			args:	[]string{"generate", "--dir", "./newFolder"},
+			args:	[]string{"generate", "--out-dir", "./newFolder"},
 			check: func(fs afero.Fs, t *testing.T) {
 				absolutePath, err := filepath.Abs(".")
 				require.NoError(t, err)
@@ -80,7 +80,7 @@ func TestWasmCommand(t *testing.T) {
 		}, {
 			name: "should create the project at the given path, also" +
 				"if the folder exists",
-			args:	[]string{"generate", "--dir", "./existFolder"},
+			args:	[]string{"generate", "--out-dir", "./existFolder"},
 			before: func(fs afero.Fs) error {
 				return fs.MkdirAll("./existFolder", 0755)
 			},
@@ -93,7 +93,7 @@ func TestWasmCommand(t *testing.T) {
 		}, {
 			name: "should fail if the given dir contains files created by " +
 				"this command*",
-			args:	[]string{"generate", "--dir", "./existFolder"},
+			args:	[]string{"generate", "--out-dir", "./existFolder"},
 			before: func(fs afero.Fs) error {
 				absolutePath, err := filepath.Abs(".")
 				folderPath := filepath.Join(absolutePath, "existFolder")

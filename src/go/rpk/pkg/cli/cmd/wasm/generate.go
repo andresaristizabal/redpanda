@@ -39,14 +39,14 @@ var manifest = func() map[string][]genFile {
 }
 
 func NewGenerateCommand(fs afero.Fs) *cobra.Command {
-	var dir string
+	var outDir string
 	const localDir = "./"
 	command := &cobra.Command{
 		Use:	"generate",
-		Short:	"Create a npm template project for inline WASM engine",
+		Short:	"Create an npm template project for inline WASM engine",
 		RunE: func(_ *cobra.Command, args []string) error {
-			if dir == localDir {
-				path, err := filepath.Abs(dir)
+			if outDir == localDir {
+				path, err := filepath.Abs(outDir)
 				if err != nil {
 					return err
 				}
@@ -54,7 +54,7 @@ func NewGenerateCommand(fs afero.Fs) *cobra.Command {
 				return executeGenerate(fs, rootPath)
 
 			}
-			path, err := filepath.Abs(dir)
+			path, err := filepath.Abs(outDir)
 			if err != nil {
 				return err
 			}
@@ -63,8 +63,8 @@ func NewGenerateCommand(fs afero.Fs) *cobra.Command {
 	}
 
 	command.Flags().StringVar(
-		&dir,
-		"dir",
+		&outDir,
+		"out-dir",
 		localDir,
 		"The path where the transformer project will be created",
 	)
