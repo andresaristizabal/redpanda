@@ -42,23 +42,29 @@ func NewGenerateCommand(fs afero.Fs) *cobra.Command {
 	var outDir string
 	const localDir = "./"
 	command := &cobra.Command{
-		Use:	"generate",
+		Use:	"generate <name>",
 		Short:	"Create an npm template project for inline WASM engine",
+		Args: func(cmd *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return fmt.Errorf("name argument is required, rpk wasm generate <name>")
+			}
+			return nil
+		},
 		RunE: func(_ *cobra.Command, args []string) error {
+			folderName := args[0]
 			if outDir == localDir {
 				path, err := filepath.Abs(outDir)
 				if err != nil {
 					return err
 				}
-				rootPath := filepath.Join(path, "wasm")
+				rootPath := filepath.Join(path, folderName)
 				return executeGenerate(fs, rootPath)
-
 			}
 			path, err := filepath.Abs(outDir)
 			if err != nil {
 				return err
 			}
-			return executeGenerate(fs, path)
+			return executeGenerate(fs, filepath.Join(path, folderName))
 		},
 	}
 
