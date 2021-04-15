@@ -158,12 +158,14 @@ export class ProcessBatchServer extends SupervisorServer {
      * We create a 'module' result where our function save the object that
      * coprocessor script exports.
      */
-    const module: ResultFunction = {};
+    const module: ResultFunction = {
+      exports: {},
+    };
     /**
      * pass our module object and nodeJs require function.
      */
     try {
-      loadScript(module, require);
+      loadScript(module, () => null);
     } catch (e) {
       this.logger.error(`error on load wasm script: ${id}, ${e.message}`);
       return [undefined, errors.validateLoadScriptError(e, id, script)];
